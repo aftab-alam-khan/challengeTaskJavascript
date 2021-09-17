@@ -60,13 +60,13 @@ try {
     console.log(phone.subscriber);
 } catch (error) {
     if (error instanceof InvalidAreaPhoneNumberError) {
-        console.debug(error.message);
+        console.debug(`${error.name}: ${error.message}`);
     }
     else if (error instanceof InvalidServiceCodePhoneNumberError) {
-        console.debug(error.message);
+        console.debug(`${error.name}: ${error.message}`);
     }
     else if (error instanceof InvalidSubscriberPhoneNumberError) {
-        console.debug(error.message);
+        console.debug(`${error.name}: ${error.message}`);
     } else {
         console.debug(error)
     }
