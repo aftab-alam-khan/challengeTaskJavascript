@@ -6,134 +6,76 @@ class PhoneNumberError extends Error {
     }
 }
 
-class PhoneNumber{
-    constructor(phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    #regexFilter () {
-        const regex = /\d+/g;
-        const regexMatch = this.phoneNumber.toString().match(regex);
-        return  regexMatch.join('');
-    }
-
-    #filterPhoneNumber() {
-        try {
-            const finalString = this.#regexFilter();
-            if  (finalString.length === 11 && finalString[0] === '1'){
-                const a = finalString.slice(1, 4);
-                const b = finalString.slice(4, 7);
-                const c = finalString.slice(7, );
-
-                return [a, b, c];
-            
-            } else if (finalString.length === 10) {
-                const a = finalString.slice(0, 3);
-                const b = finalString.slice(3, 6);
-                const c = finalString.slice(6, );
-
-                return [a, b, c];
-            } else {
-                throw new PhoneNumberError('Please enter valid US phone number');
-            }
-        } catch (error) {
-            console.log(error.message);
-            console.log(error.name);
-            console.log(error.stack)
-        }
-        
-    }
-    get area() {
-        if (this.#filterPhoneNumber()) {
-            return this.#filterPhoneNumber()[0];
-        }
-    }
-
-    get prefix() {
-        if (this.#filterPhoneNumber()) {
-            return this.#filterPhoneNumber()[1];
-        }
-    }
-
-    get subscribe() {
-        if (this.#filterPhoneNumber()) {
-            return this.#filterPhoneNumber()[2];
-        }
-    }
-
-    get fancyString() {
-        if (this.#filterPhoneNumber()) {
-            return `+1 (${this.#filterPhoneNumber()[0]}) (${this.#filterPhoneNumber()[1]}) (${this.#filterPhoneNumber()[2]})`;
-        }
+class InvalidAreaPhoneNumberError extends Error{
+    constructor(message) {
+        super(message);
+        this.name = "InvalidAreaPhoneNumberError";
     }
 }
 
+class InvalidServiceCodePhoneNumberError extends Error{
+    constructor(message) {
+        super(message);
+        this.name = "InvalidServiceCodePhoneNumberError";
+    }
+}
 
-// mix string
-// console.log('mix string')
-// console.log('=================')
-// console.log('')
-const phone = new PhoneNumber(`17asd897897asfsdf879';*(*)&*&`);
-// console.log(p.area);
-// console.log(p.prefix);
-// console.log(p.subscribe);
-// console.log(p.fancyString);
+class InvalidSubscriberPhoneNumberError extends Error{
+    constructor(message) {
+        super(message);
+        this.name = "InvalidSubscriberPhoneNumberError";
+    }
+}
 
-// console.log('')
-// console.log('')
+class PhoneNumber {
 
-// only interger string
-// console.log('only interger string')
-// console.log('=================')
-const phone1 = new PhoneNumber(`7879878239`);
-// console.log(p1.area);
-// console.log(p1.prefix);
-// console.log(p1.subscribe);
-// console.log(p1.fancyString);
-
-// console.log('')
-// console.log('')
-
-// only interger
-// console.log('only interger')
-// console.log('=================')
-const phone2 = new PhoneNumber(7879878239);
-// console.log(p2.area);
-// console.log(p2.prefix);
-// console.log(p2.subscribe);
-// console.log(p2.fancyString);
-
-console.table(
-    [
-        {
-            'mix string': [
-                `area: ${phone.area}, prefix: ${phone.prefix}, subscribe: ${phone.subscribe}`
-            ],
-            'only interger string': [
-                `area: ${phone1.area}, prefix: ${phone1.prefix}, subscribe: ${phone1.subscribe}`
-            ],
-            'only interger': [
-                `area: ${phone2.area}, prefix: ${phone2.prefix}, subscribe: ${phone2.subscribe}`
-            ]
-        },
-        {
-            'mix string': [
-                `fancyString: ${phone.fancyString}`
-            ],
-            'only interger string': [
-                `fancyString: ${phone1.fancyString}`
-            ],
-            'only interger': [
-                `fancyString: ${phone2.fancyString}`
-            ]
+    constructor(area, serviceCode, subscriber) {
+        
+        //validation for Area
+        if ( (area.toString().length != 3) || (isNaN(area)) ) {
+            throw new InvalidAreaPhoneNumberError(`The area length is allowed only 3 and you passed '${area.toString().length}' and only numeric digit is allowed.`);
         }
-    ]
-)
 
-console.log('\n')
-// wrong phone number interger string
-//this will show the custom error
-console.log(`Show the custom error`)
-console.log('=================')
-const phone3 = new PhoneNumber(`87879878239`);
-console.log(phone3.area);
+        //validation for serviceCode
+        if ( (serviceCode.toString().length != 3) || (isNaN(serviceCode)) ) {
+            throw new InvalidServiceCodePhoneNumberError(`The serviceCode length is allowed only 3 and you passed ${serviceCode.toString().length} and only numeric digit is allowed.`);
+        }
+
+        //validation for subscriber
+        if ( (subscriber.toString().length != 3) || (isNaN(subscriber)) ) {
+            throw new InvalidSubscriberPhoneNumberError(`The subscriber length is allowed only 4 and you passed ${subscriber.toString().length} and only numeric digit is allowed.`);
+        }
+        this._area = area;
+        this._serviceCode = serviceCode;
+        this._subscriber = subscriber;
+    }
+
+    get area() {
+        return this._area;
+    }
+    get serviceCode() {
+        return this._serviceCode;
+    }
+    get subscriber() {
+        return this._subscriber;
+    }
+}
+
+try {
+    const phone = new PhoneNumber('231', '4567', '78896');
+    console.log(phone.area);
+    console.log(phone.serviceCode);
+    console.log(phone.subscriber);
+} catch (error) {
+    if (error instanceof InvalidAreaPhoneNumberError) {
+        console.debug(error.message);
+    }
+    else if (error instanceof InvalidServiceCodePhoneNumberError) {
+        console.debug(error.message);
+    }
+    else if (error instanceof InvalidSubscriberPhoneNumberError) {
+        console.debug(error.message);
+    } else {
+        console.debug(error)
+    }
+}
