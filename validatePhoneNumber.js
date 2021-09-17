@@ -1,11 +1,3 @@
-
-class PhoneNumberError extends Error {
-    constructor(message) {
-        super(message);
-        this.name = "PhoneNumberError";
-    }
-}
-
 class InvalidAreaPhoneNumberError extends Error{
     constructor(message) {
         super(message);
