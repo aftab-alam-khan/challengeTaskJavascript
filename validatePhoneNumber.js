@@ -24,18 +24,27 @@ class PhoneNumber {
     constructor(area, serviceCode, subscriber) {
         
         //validation for Area
-        if ( (area.toString().length != 3) || (isNaN(area)) ) {
-            throw new InvalidAreaPhoneNumberError(`The area length is allowed only 3 and you passed '${area.toString().length}' and the area parameter only numeric is allowed.`);
+        if (area.toString().length != 3) {
+            throw new InvalidAreaPhoneNumberError(`The area length is allowed only 3 and you passed '${area.toString().length}'.`);
+        }
+        if (/^\d{3}$/.test(area)) {
+            throw new InvalidAreaPhoneNumberError(`Only integers are allowed for the area code. You passed '${area}'.`);
         }
 
         //validation for serviceCode
-        if ( (serviceCode.toString().length != 3) || (isNaN(serviceCode)) ) {
-            throw new InvalidServiceCodePhoneNumberError(`The serviceCode length is allowed only 3 and you passed ${serviceCode.toString().length} and the serviceCode parameter only numeric is allowed.`);
+        if (serviceCode.toString().length != 3) {
+            throw new InvalidAreaPhoneNumberError(`The serviceCode length is allowed only 3 and you passed '${area.toString().length}'.`);
+        }
+        if (/^\d{3}$/.test(serviceCode)) {
+            throw new InvalidAreaPhoneNumberError(`Only integers are allowed for the serviceCode code. You passed '${area}'.`);
         }
 
         //validation for subscriber
-        if ( (subscriber.toString().length != 3) || (isNaN(subscriber)) ) {
-            throw new InvalidSubscriberPhoneNumberError(`The subscriber length is allowed only 4 and you passed ${subscriber.toString().length} and the subscriber parameter only numeric is allowed.`);
+        if (subscriber.toString().length != 4) {
+            throw new InvalidAreaPhoneNumberError(`The subscriber length is allowed only 4 and you passed '${area.toString().length}'.`);
+        }
+        if (/^\d{3}$/.test(subscriber)) {
+            throw new InvalidAreaPhoneNumberError(`Only integers are allowed for the subscriber code. You passed '${area}'.`);
         }
         this._area = area;
         this._serviceCode = serviceCode;
@@ -71,3 +80,5 @@ try {
         console.debug(error)
     }
 }
+
+
